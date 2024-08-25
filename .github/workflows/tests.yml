@@ -44,13 +44,8 @@ jobs:
 
       - name: Download and extract CEmu
         run: |
-          curl -sL https://github.com/CE-Programming/CEmu/releases/download/nightly/CEmu-nightly_linux64_qt6_static | tar xz
+          curl -sL https://github.com/CE-Programming/CEmu/releases/download/nightly/CEmu-nightly_linux64_qt6_static -o CEmu
           
-      - name: Build Autotester CLI
-        run: make -j4 -C ${{env.CEMU_PATH}}/tests/autotester
-      - name: Install Autotester CLI
-        run: cmake -E copy ${{env.CEMU_PATH}}/tests/autotester/autotester ${{env.CEDEV_BIN}}/cemu-autotester
-
       - name: Download CEmu Rom
         id: download-secrets
         uses: carlosperate/download-file-action@v1.0.3
