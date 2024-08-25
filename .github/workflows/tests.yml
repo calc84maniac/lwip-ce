@@ -47,11 +47,8 @@ jobs:
           curl -sL https://github.com/CE-Programming/CEmu/releases/download/nightly/CEmu-nightly_linux64_qt6_static -o CEmu
           
       - name: Download CEmu Rom
-        id: download-secrets
-        uses: carlosperate/download-file-action@v1.0.3
-        with:
-          file-url: ${{env.HOST_DOMAIN}}/resources/CE.rom
-          location: ${{env.SECRETS_PATH}}
+        run: |
+          curl -sL ${{env.HOST_DOMAIN}}/resources/CE.rom -o ${{env.SECRETS_PATH}}/CE.rom
 
       - name: Run Unit Tests
         run: |
