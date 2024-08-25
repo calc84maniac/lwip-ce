@@ -45,7 +45,7 @@ jobs:
       - name: Download and extract CEmu
         run: |
           curl -sLO https://download.opensuse.org/repositories/home:/adriweb:/CEmu/xUbuntu_24.04/amd64/cemu_1.3-0_amd64.deb
-          sudo gdebi cemu_1.3-0_amd64.deb
+          sudo apt install ${{github.workspace}}/cemu_1.3-0_amd64.deb
           
       - name: Build Autotester CLI
         run: make -j4 -C ${{env.CEMU_PATH}}/tests/autotester
