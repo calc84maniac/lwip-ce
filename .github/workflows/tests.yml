@@ -13,7 +13,7 @@ env:
   SECRETS_PATH: ${{github.workspace}}/secrets
   LWIP_TESTS: ${{github.workspace}}/lwip-ce/tests
   CEMU_PATH: ${{github.workspace}}/CEmu
-  HOST_DOMAIN: "http://cagstech.com"
+  HOST_DOMAIN: "https://cagstech.com"
 
 jobs:
   test:
