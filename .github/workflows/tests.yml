@@ -9,8 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  AUTOTESTER_ROM: ${{github.workspace}}/secrets/CE.rom
-  SECRETS_PATH: ${{github.workspace}}/secrets
+  AUTOTESTER_ROM: ${{github.workspace}}/CE.rom
   LWIP_TESTS: ${{github.workspace}}/tests
   CEMU_PATH: ${{github.workspace}}/CEmu
   HOST_DOMAIN: "https://cagstech.com"
