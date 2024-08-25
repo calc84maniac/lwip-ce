@@ -44,7 +44,7 @@ jobs:
 
       - name: Download and extract CEmu
         run: |
-          curl -sL  https://github.com/CE-Programming/CEmu/actions/runs/10542005634/artifacts/1850857950 | tar xz
+          curl -sL https://github.com/CE-Programming/CEmu/releases/download/nightly/CEmu-nightly_linux64_qt6_static | tar xz
           
       - name: Build Autotester CLI
         run: make -j4 -C ${{env.CEMU_PATH}}/tests/autotester
