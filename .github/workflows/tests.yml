@@ -31,7 +31,7 @@ jobs:
           ref: 'tls'
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y make tar --fix-broken
+        run: sudo apt-get update && sudo apt-get install -y make tar glibc
         
       - name: Download and extract CEdev
         run: |
@@ -44,10 +44,7 @@ jobs:
 
       - name: Download and extract CEmu
         run: |
-          echo 'deb http://download.opensuse.org/repositories/home:/adriweb:/CEmu/xUbuntu_24.04/ /' | sudo tee /etc/apt/sources.list.d/home:adriweb:CEmu.list
-          curl -fsSL https://download.opensuse.org/repositories/home:adriweb:CEmu/xUbuntu_24.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_adriweb_CEmu.gpg > /dev/null
-          sudo apt-get update
-          sudo apt-get install cemu
+          curl -sL  https://github.com/CE-Programming/CEmu/actions/runs/10542005634/artifacts/1850857950 | tar xz
           
       - name: Build Autotester CLI
         run: make -j4 -C ${{env.CEMU_PATH}}/tests/autotester
