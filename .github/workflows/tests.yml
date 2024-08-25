@@ -54,6 +54,7 @@ jobs:
           find ${{env.LWIP_TESTS}} -name autotest.json -print0 | {
             failed=0
             while read -d '' test; do
+              make -C $(dirname $test)
               make -C $(dirname $test) test || cmake -E true $((failed += $?))
             done
             cmake -E echo "$failed tests failed"
