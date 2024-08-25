@@ -11,7 +11,7 @@ on:
 env:
   AUTOTESTER_ROM: ${{github.workspace}}/secrets/CE.rom
   SECRETS_PATH: ${{github.workspace}}/secrets
-  LWIP_TESTS: ${{github.workspace}}/lwip-ce/tests
+  LWIP_TESTS: ${{github.workspace}}/tests
   CEMU_PATH: ${{github.workspace}}/CEmu
   HOST_DOMAIN: "https://cagstech.com"
 
@@ -48,7 +48,7 @@ jobs:
           
       - name: Download CEmu Rom
         run: |
-          curl -sL ${{env.HOST_DOMAIN}}/resources/CE.rom -o ${{env.SECRETS_PATH}}/CE.rom
+          curl -sL ${{env.HOST_DOMAIN}}/resources/CE.rom -o CE.rom
 
       - name: Run Unit Tests
         run: |
@@ -63,4 +63,4 @@ jobs:
 
       - name: Remove CEmu Rom
         if: always()
-        run: cmake -E rm -rf ${{env.SECRETS_PATH}}
+        run: rm CE.rom
