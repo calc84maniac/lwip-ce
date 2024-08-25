@@ -31,7 +31,7 @@ jobs:
           ref: 'tls'
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y make tar libarchive13t64 libc6 libqt5core5t64 libqt5network5t64 libqt5widgets5t64 --fix-broken
+        run: sudo apt-get update && sudo apt-get install -y make tar --fix-broken
         
       - name: Download and extract CEdev
         run: |
