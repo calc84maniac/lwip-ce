@@ -75,29 +75,45 @@ jobs:
       - name: Run Unit Tests
         run: |
           find ${{env.LWIP_TESTS}} -name autotest.json -print0 | {
-            declare -A test_results
-            test_results[results][summary][tests]=0
-            test_results[results][summary][passed]=0
-            test_results[results][summary][failed]=0
+            # Initialize variables
+            total_tests=0
+            total_passed=0
+            total_failed=0
+            results="[]"
+
             while read -d '' test; do
               status=0
-              make -C $(dirname $test) clean
-              make -C $(dirname $test) all test || $((status = $?))
-              declare -A result
-              result[name]=$(dirname $test)
+              test_dir=$(dirname "$test")
+              make -C "$test_dir" clean
+              make -C "$test_dir" all test || status=$?
+
+              # Update summary counts
+              ((total_tests++))
               if [ $status -eq 0 ]; then
-                $((test_results[results][summary][passed] += 1))
-                result[status]="passed"
+                ((total_passed++))
+                test_status="passed"
               else
-                $((test_results[results][summary][failed] += 1))
-                result[status]="failed"
+                ((total_failed++))
+                test_status="failed"
               fi
-              $((test_results[results][summary][tests] += 1))
-              test_results[results][tests][] = result
+
+              # Create a JSON object for the individual test result
+              result=$(jq -n --arg name "$test_dir" --arg status "$test_status" \
+                '{name: $name, status: $status}')
+              
+              # Append this result to the results array
+              results=$(echo "$results" | jq --argjson result "$result" '. += [$result]')
             done
-            declare -r JSON_CONTENT=$(jq $test_results)
-            echo $JSON_CONTENT
-            echo $JSON_CONTENT > ${{github.workspace}}/test_results.json   
+
+            # Build the final JSON object
+            summary=$(jq -n --argjson tests "$total_tests" --argjson passed "$total_passed" --argjson failed "$total_failed" \
+              '{tests: $tests, passed: $passed, failed: $failed}')
+            final_json=$(jq -n --argjson summary "$summary" --argjson results "$results" \
+              '{summary: $summary, tests: $results}')
+
+            # Output the JSON to the console and to a file
+            echo "$final_json"
+            echo "$final_json" > ${{github.workspace}}/test_results.json
           }
 
       - name: Remove CEmu Rom
