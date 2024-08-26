@@ -90,6 +90,7 @@ jobs:
               # Create a JSON object for the individual test result
               result=$(jq -n --arg name "$test_dir" --arg status "$test_status" \
                 '{name: $name, status: $status}')
+              echo "$result"
               
               # Append this result to the results array
               results=$(echo "$results" | jq --argjson result "$result" '. += [$result]')
