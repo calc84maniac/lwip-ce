@@ -69,7 +69,6 @@ jobs:
             total_tests=0
             total_passed=0
             total_failed=0
-            results="[]"
 
             while read -d '' test; do
               status=0
@@ -86,27 +85,17 @@ jobs:
                 ((total_failed++))
                 test_status="failed"
               fi
-
-              # Create a JSON object for the individual test result
-              result=$(jq -n --arg name "$test_dir" --arg status "$test_status" \
-                '{name: $name, status: $status}')
-              echo "$result"
-              
-              # Append this result to the results array
-              results=$(echo "$results" | jq --argjson result "$result" '. += [$result]')
+              echo "TEST name=$test_dir status=$test_status\n" >> ${{github.workspace}}/test_results.log
             done
-
-            # Build the final JSON object
-            summary=$(jq -n --argjson tests "$total_tests" --argjson passed "$total_passed" --argjson failed "$total_failed" \
-              '{tests: $tests, passed: $passed, failed: $failed}')
-            final_json=$(jq -n --argjson summary "$summary" --argjson results "$results" \
-              '{summary: $summary, tests: $results}')
-
-            # Output the JSON to the console and to a file
-            echo "$final_json"
-            echo "$final_json" > ${{github.workspace}}/test_results.json
+            echo "\nSUMMARY: tests=$total_tests, passed=$total_passed, failed=$total_failed" >> ${{github.workspace}}/test_results.log
           }
 
+      - name: Upload Results Logfile
+        uses: actions/upload-artifact@v3
+        with:
+          name: results.log
+          path: ${{github.workspace}}/test_results.log
+          
       - name: Remove CEmu Rom
         if: always()
         run: rm ${{env.AUTOTESTER_ROM}}
