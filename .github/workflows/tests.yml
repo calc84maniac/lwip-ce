@@ -44,7 +44,8 @@ jobs:
 
       - name: Download CEmu Rom
         run: |
-          curl -sL https://drive.usercontent.google.com/u/0/uc?id=1UJlF95cZ6iCbTiMpwGhR6SU0OJK9BRUH&export=download | tar xz
+          curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \ 
+            -sL https://cagstech.com/resources/CE.rom -o ${{ env.CEMU_PATH }}
 
       - name: Checkout CEmu
         uses: actions/checkout@v3
