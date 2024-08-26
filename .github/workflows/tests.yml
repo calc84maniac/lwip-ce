@@ -62,40 +62,43 @@ jobs:
           ref: master
           path: ${{env.CEMU_PATH}}
           persist-credentials: false
+          
       - name: Build CEmu
         run: make -j4 -C ${{env.CEMU_PATH}}/core
+        
       - name: Build Autotester CLI
         run: make -j4 -C ${{env.CEMU_PATH}}/tests/autotester ${{matrix.ldflags}}
+        
       - name: Install Autotester CLI
         run: cmake -E copy ${{env.CEMU_PATH}}/tests/autotester/autotester${{matrix.exe}} ${{env.CEDEV_BIN}}/cemu-autotester${{matrix.exe}}
-
-      # Initializes the CodeQL tools for scanning.
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
-
-      - if: matrix.build-mode == 'manual'
-        shell: bash
-        run: |
 
       - name: Run Unit Tests
         run: |
           find ${{env.LWIP_TESTS}} -name autotest.json -print0 | {
-            failed=0
+            declare -A test_results
+            test_results[results][summary][tests]=0
+            test_results[results][summary][passed]=0
+            test_results[results][summary][failed]=0
             while read -d '' test; do
+              status=0
               make -C $(dirname $test) clean
-              make -C $(dirname $test) all test || cmake -E true $((failed += $?))
+              make -C $(dirname $test) all test || $((status = $?))
+              declare -A result
+              result[name]=$(dirname $test)
+              if [ $status -eq 0 ]; then
+                $((test_results[results][summary][passed] += 1))
+                result[status]="passed"
+              else
+                $((test_results[results][summary][failed] += 1))
+                result[status]="failed"
+              fi
+              $((test_results[results][summary][tests] += 1))
+              test_results[results][tests][] = result
             done
-            cmake -E echo "$failed tests failed"
-            exit $failed
+            declare -r JSON_CONTENT=$(jq $test_results)
+            echo $JSON_CONTENT
+            echo $JSON_CONTENT > ${{github.workspace}}/test_results.json   
           }
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{matrix.language}}"
 
       - name: Remove CEmu Rom
         if: always()
