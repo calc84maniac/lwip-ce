@@ -13,6 +13,7 @@ env:
   LWIP_TESTS: ${{github.workspace}}/tests
   CEMU_PATH: ${{github.workspace}}/CEmu
   HOST_DOMAIN: "https://cagstech.com"
+  CEDEV_BIN: ${{github.workspace}}/CEdev/bin
 
 jobs:
   test:
