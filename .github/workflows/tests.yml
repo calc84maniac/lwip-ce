@@ -85,9 +85,9 @@ jobs:
                 ((total_failed++))
                 test_status="failed"
               fi
-              echo "TEST name=$test_dir status=$test_status\n" >> ${{github.workspace}}/test_results.log
+              echo -e "TEST name=$test_dir status=$test_status\n" >> ${{github.workspace}}/test_results.log
             done
-            echo "\nSUMMARY: tests=$total_tests, passed=$total_passed, failed=$total_failed" >> ${{github.workspace}}/test_results.log
+            echo -e "\nSUMMARY: tests=$total_tests, passed=$total_passed, failed=$total_failed" >> ${{github.workspace}}/test_results.log
           }
 
       - name: Upload Results Logfile
