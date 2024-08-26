@@ -41,10 +41,20 @@ jobs:
           echo "${{github.workspace}}/CEdev/bin" >> $GITHUB_PATH
           echo $GITHUB_PATH
 
-      - name: Download and extract CEmu
-        run: |
-          curl -sL https://github.com/CE-Programming/CEmu/releases/download/nightly/CEmu-nightly_linux64_qt6_static -o ${{env.CEMU_PATH}}
-          chmod +x ${{env.CEMU_PATH}}
+      - name: Checkout CEmu
+        uses: actions/checkout@v3
+        with:
+          repository: CE-Programming/CEmu
+          ref: master
+          path: ${{env.CEMU_PATH}}
+          persist-credentials: false
+      - name: Build CEmu
+        run: make -j4 -C ${{env.CEMU_PATH}}/core
+      - name: Build Autotester CLI
+        run: make -j4 -C ${{env.CEMU_PATH}}/tests/autotester ${{matrix.ldflags}}
+      - name: Install Autotester CLI
+        run: cmake -E copy ${{env.CEMU_PATH}}/tests/autotester/autotester${{matrix.exe}} ${{env.CEDEV_BIN}}/cemu-autotester${{matrix.exe}}
+
           
       - name: Download CEmu Rom
         run: |
