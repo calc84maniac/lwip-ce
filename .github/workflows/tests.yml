@@ -18,12 +18,20 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      # required for all workflows
+      security-events: write
+
+      # required to fetch internal or private CodeQL packs
+      packages: read
 
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'c-cpp' ]
-        build-mode: manual
+        language: [ 'cpp' ]
+        include:
+        - language: c-cpp
+          build-mode: manual
         
     steps:
       - name: Checkout TLS branch
