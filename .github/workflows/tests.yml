@@ -74,14 +74,14 @@ jobs:
               status=0
               test_dir=$(dirname "$test")
               make -C "$test_dir" clean
-              make -C "$test_dir" all test || $((status=$?))
+              make -C "$test_dir" all test || ((status=$?))
               
-              $(( total_tests += 1 ))
+              (( total_tests += 1 ))
               if [ $status -eq 0 ]; then
-                $(( total_passed += 1 ))
+                (( total_passed += 1 ))
                 test_status="passed"
               else
-                $(( total_failed += 1 ))
+                (( total_failed += 1 ))
                 test_status="failed"
               fi
               echo -e "TEST name=$test_dir status=$test_status\n" >> ${{github.workspace}}/test_results.log
