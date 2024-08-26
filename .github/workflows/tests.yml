@@ -22,7 +22,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp' ]
+        language: [ 'c-cpp' ]
+        build-mode: manual
         
     steps:
       - name: Checkout TLS branch
@@ -60,6 +61,17 @@ jobs:
       - name: Install Autotester CLI
         run: cmake -E copy ${{env.CEMU_PATH}}/tests/autotester/autotester${{matrix.exe}} ${{env.CEDEV_BIN}}/cemu-autotester${{matrix.exe}}
 
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - if: matrix.build-mode == 'manual'
+        shell: bash
+        run: |
+
       - name: Run Unit Tests
         run: |
           find ${{env.LWIP_TESTS}} -name autotest.json -print0 | {
@@ -71,6 +83,11 @@ jobs:
             cmake -E echo "$failed tests failed"
             exit $failed
           }
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
 
       - name: Remove CEmu Rom
         if: always()
