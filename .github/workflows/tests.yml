@@ -44,7 +44,7 @@ jobs:
       - name: Download and extract CEmu
         run: |
           curl -sL https://github.com/CE-Programming/CEmu/releases/download/nightly/CEmu-nightly_linux64_qt6_static -o ${{env.CEMU_PATH}}
-          chmod +x CEmu
+          chmod +x ${{env.CEMU_PATH}}
           
       - name: Download CEmu Rom
         run: |
