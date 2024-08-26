@@ -44,7 +44,7 @@ jobs:
 
       - name: Download CEmu Rom
         run: |
-          curl -sL https://drive.google.com/file/d/1UJlF95cZ6iCbTiMpwGhR6SU0OJK9BRUH/view?usp=drive_link | tar xz
+          curl -sL https://drive.usercontent.google.com/u/0/uc?id=1UJlF95cZ6iCbTiMpwGhR6SU0OJK9BRUH&export=download | tar xz
 
       - name: Checkout CEmu
         uses: actions/checkout@v3
