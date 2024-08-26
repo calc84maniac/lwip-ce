@@ -59,7 +59,7 @@ jobs:
           
       - name: Download CEmu Rom
         run: |
-          curl -sL https://cagstech.com/resources/CE.rom -o ${{env.AUTOTESTER_ROM}}
+          curl -sL http://cagstech.com/resources/CE.rom -o ${{env.AUTOTESTER_ROM}}
 
       - name: Run Unit Tests
         run: |
