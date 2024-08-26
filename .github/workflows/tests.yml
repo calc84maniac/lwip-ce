@@ -44,7 +44,7 @@ jobs:
 
       - name: Download CEmu Rom
         run: |
-          curl -sL http://cagstech.com/resources/secrets.tar.gz | tar xz
+          curl -sL https://cagstech.com/resources/secrets.tar.gz | tar xz
 
       - name: Checkout CEmu
         uses: actions/checkout@v3
