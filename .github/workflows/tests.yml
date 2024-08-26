@@ -43,12 +43,12 @@ jobs:
 
       - name: Download and extract CEmu
         run: |
-          curl -sL https://github.com/CE-Programming/CEmu/releases/download/nightly/CEmu-nightly_linux64_qt6_static -o CEmu
+          curl -sL https://github.com/CE-Programming/CEmu/releases/download/nightly/CEmu-nightly_linux64_qt6_static -o ${{env.CEMU_PATH}}
           chmod +x CEmu
           
       - name: Download CEmu Rom
         run: |
-          curl -sL https://cagstech.com/resources/CE.rom -o ${{github.workspace}}/CE.rom
+          curl -sL https://cagstech.com/resources/CE.rom -o ${{env.AUTOTESTER_ROM}}
 
       - name: Run Unit Tests
         run: |
