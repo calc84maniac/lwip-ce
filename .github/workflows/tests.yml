@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: CE-Programming/CEmu
-          ref: master
+          ref: latest-stable
           path: ${{env.CEMU_PATH}}
           persist-credentials: false
       - name: Build CEmu
