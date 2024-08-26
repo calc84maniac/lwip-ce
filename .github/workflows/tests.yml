@@ -84,7 +84,7 @@ jobs:
                 (( total_failed += 1 ))
                 test_status="failed"
               fi
-              echo -e "{\"name\"=\"$(basename $test_dir)\",\"status\"=\"$test_status\"}" >> "$test_dir/result.json"
+              echo -e "{\"name\":\"$(basename $test_dir)\",\"status\":\"$test_status\"}" >> "$test_dir/result.json"
             done
             echo -e "\"summary\":{\"tests\":\"$total_tests\",\"passed\":\"$total_passed\",\"failed\":\"$total_failed\"}" >> ${{github.workspace}}/summary.json
           }
@@ -107,12 +107,15 @@ jobs:
           echo -e "]" >> ${{github.workspace}}/results.json
           echo -e "}}" >> ${{github.workspace}}/results.json
           rm ${{github.workspace}}/summary.json
-          
+
+      - name: Publish CTRF Detailed Test Summary Results
+        run: npx github-actions-ctrf tests ${{github.workspace}}/results.json
+        if: always()
 
       - name: Upload Results Logfile
         uses: actions/upload-artifact@v3
         with:
-          name: results.log
+          name: results.json
           path: ${{github.workspace}}/results.json
           
       - name: Remove CEmu Rom
