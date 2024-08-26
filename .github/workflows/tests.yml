@@ -76,6 +76,7 @@ jobs:
               make -C "$test_dir" clean
               make -C "$test_dir" all test || status=$?
 
+              echo "We got here"
               # Update summary counts
               ((total_tests++))
               if [ $status -eq 0 ]; then
@@ -85,7 +86,9 @@ jobs:
                 ((total_failed++))
                 test_status="failed"
               fi
+              echo "About to echo"
               echo -e "TEST name=$test_dir status=$test_status\n" >> ${{github.workspace}}/test_results.log
+              echo "Echod"
             done
             echo -e "\nSUMMARY: tests=$total_tests, passed=$total_passed, failed=$total_failed" >> ${{github.workspace}}/test_results.log
           }
