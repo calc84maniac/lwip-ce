@@ -44,8 +44,7 @@ jobs:
 
       - name: Download CEmu Rom
         run: |
-          wget https://cagstech.com/resources/secrets.tar.gz
-          tar xzf secrets.tar.gz
+          curl -sL https://drive.google.com/file/d/1UJlF95cZ6iCbTiMpwGhR6SU0OJK9BRUH/view?usp=drive_link | tar xz
 
       - name: Checkout CEmu
         uses: actions/checkout@v3
