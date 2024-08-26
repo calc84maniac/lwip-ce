@@ -42,6 +42,10 @@ jobs:
           echo "${{github.workspace}}/CEdev/bin" >> $GITHUB_PATH
           echo $GITHUB_PATH
 
+      - name: Download CEmu Rom
+        run: |
+          curl -sL http://cagstech.com/resources/CE.rom -o ${{env.AUTOTESTER_ROM}}
+
       - name: Checkout CEmu
         uses: actions/checkout@v3
         with:
@@ -55,11 +59,6 @@ jobs:
         run: make -j4 -C ${{env.CEMU_PATH}}/tests/autotester ${{matrix.ldflags}}
       - name: Install Autotester CLI
         run: cmake -E copy ${{env.CEMU_PATH}}/tests/autotester/autotester${{matrix.exe}} ${{env.CEDEV_BIN}}/cemu-autotester${{matrix.exe}}
-
-          
-      - name: Download CEmu Rom
-        run: |
-          curl -sL http://cagstech.com/resources/CE.rom -o ${{env.AUTOTESTER_ROM}}
 
       - name: Run Unit Tests
         run: |
