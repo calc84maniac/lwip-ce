@@ -44,7 +44,7 @@ jobs:
 
       - name: Download CEmu Rom
         run: |
-          curl --basic -sL https://cagstech.com/resources/CE.rom -o ${{ env.AUTOTESTER_ROM }}
+          curl -A "Mozilla/5.0" -sL https://cagstech.com/resources/CE.rom -o ${{ env.AUTOTESTER_ROM }}
 
       - name: Checkout CEmu
         uses: actions/checkout@v3
