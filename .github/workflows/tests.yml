@@ -44,7 +44,7 @@ jobs:
       - name: Download and extract CEmu
         run: |
           curl -sL https://github.com/CE-Programming/CEmu/releases/download/nightly/CEmu-nightly_linux64_qt6_static -o CEmu
-          chmod u+x CEmu
+          chmod +x CEmu
           
       - name: Download CEmu Rom
         run: |
@@ -55,7 +55,7 @@ jobs:
           find ${{env.LWIP_TESTS}} -name autotest.json -print0 | {
             failed=0
             while read -d '' test; do
-              make -C $(dirname $test) all test || cmake -E true $((failed += $?))
+              make -v -C $(dirname $test) all test || cmake -E true $((failed += $?))
             done
             cmake -E echo "$failed tests failed"
             exit $failed
