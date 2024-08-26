@@ -84,16 +84,36 @@ jobs:
                 (( total_failed += 1 ))
                 test_status="failed"
               fi
-              echo -e "TEST name=$test_dir status=$test_status\n" >> ${{github.workspace}}/test_results.log
+              echo -e "{\"name\"=\"$(basename $test_dir)\",\"status\"=\"$test_status\"}" >> "$test_dir/result.json"
             done
-            echo -e "\nSUMMARY: tests=$total_tests, passed=$total_passed, failed=$total_failed" >> ${{github.workspace}}/test_results.log
+            echo -e "\"summary\":{\"tests\":\"$total_tests\",\"passed\":\"$total_passed\",\"failed\":\"$total_failed\"}" >> ${{github.workspace}}/summary.json
           }
+
+      - name: Generate JSON Results
+        run: |
+          echo -e "{\"results\":{" > ${{github.workspace}}/results.json
+          cat ${{github.workspace}}/summary.json >> ${{github.workspace}}/results.json
+          echo -e ",\"tests\":[" >> ${{github.workspace}}/results.json
+          find ${{env.LWIP_TESTS}} -name result.json -print0 | {
+            tmp_json=""
+            while read -rd '' test; do
+              test_dir=$(dirname "$test")
+              tmp_json="$tmp_json,$(cat $test_dir/result.json)" 
+              rm $test_dir/result.json
+            done
+            tmp_json="${tmp_json:1}"
+            echo $tmp_json >> ${{github.workspace}}/results.json
+          }
+          echo -e "]" >> ${{github.workspace}}/results.json
+          echo -e "}}" >> ${{github.workspace}}/results.json
+          rm ${{github.workspace}}/summary.json
+          
 
       - name: Upload Results Logfile
         uses: actions/upload-artifact@v3
         with:
           name: results.log
-          path: ${{github.workspace}}/test_results.log
+          path: ${{github.workspace}}/results.json
           
       - name: Remove CEmu Rom
         if: always()
