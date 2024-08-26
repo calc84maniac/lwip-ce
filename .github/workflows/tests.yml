@@ -70,25 +70,21 @@ jobs:
             total_passed=0
             total_failed=0
 
-            while read -d '' test; do
+            while read -rd '' test; do
               status=0
               test_dir=$(dirname "$test")
               make -C "$test_dir" clean
-              make -C "$test_dir" all test || status=$?
-
-              echo "We got here"
-              # Update summary counts
-              ((total_tests++))
+              make -C "$test_dir" all test || $((status=$?))
+              
+              $(( total_tests += 1 ))
               if [ $status -eq 0 ]; then
-                ((total_passed++))
+                $(( total_passed += 1 ))
                 test_status="passed"
               else
-                ((total_failed++))
+                $(( total_failed += 1 ))
                 test_status="failed"
               fi
-              echo "About to echo"
               echo -e "TEST name=$test_dir status=$test_status\n" >> ${{github.workspace}}/test_results.log
-              echo "Echod"
             done
             echo -e "\nSUMMARY: tests=$total_tests, passed=$total_passed, failed=$total_failed" >> ${{github.workspace}}/test_results.log
           }
