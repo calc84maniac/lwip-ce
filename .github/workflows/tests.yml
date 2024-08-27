@@ -6,6 +6,7 @@ on:
       - tls
     paths:
       - src/tls/*
+      - tests/*
   workflow_dispatch:
 
 env:
