@@ -91,6 +91,8 @@ jobs:
               echo -e "{\"name\":\"$(basename $test_dir)\",\"status\":\"$test_status\",\"duration\":\"$test_duration\"}" >> "$test_dir/result.json"
             done
             echo -e "\"summary\":{\"tests\":\"$total_tests\",\"passed\":\"$total_passed\",\"failed\":\"$total_failed\",\"pending\":\"0\",\"skipped\":\"0\",\"other\":\"0\",\"start\":\"$start_time\",\"stop\":\"$(date +%s)\"}" >> ${{github.workspace}}/summary.json
+            cmake -E echo "$total_failed tests failed"
+            exit $total_failed
           }
 
       - name: Generate JSON Results
