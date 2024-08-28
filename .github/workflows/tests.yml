@@ -2,11 +2,8 @@ name: Unit Tests
 
 on:
   push:
-    branches:
-      - tls
-    paths:
-      - src/tls/*
-      - tests/*
+    branches: ['tls']
+    paths: ['src/tls/**', 'tests/**']
   workflow_dispatch:
 
 env:
